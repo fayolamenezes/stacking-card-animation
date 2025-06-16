@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>3D Stack – Only 3 Tops Visible</title>
+  <title>3D Stack – Smooth Slide</title>
   <style>
     body {
       margin: 0;
@@ -73,25 +73,26 @@
     gsap.registerPlugin(ScrollTrigger);
 
     const cards = gsap.utils.toArray(".card");
-    const maxVisible = 3;      // Max top edges visible
-    const spacing = 40;        // Y offset per stacked card
+    const maxVisible = 3;      // Max visible tops
+    const spacing = 40;        // Stack spacing
+    const entryY = 1000;       // More slide from below
+    const tiltAngle = -10;     // Shallow tilt
 
-    // Initial setup — cards start lower, invisible
+    // Initial state
     cards.forEach((card, i) => {
       gsap.set(card, {
-        y: spacing * maxVisible, // Start below the visible range
-        rotateX: -60,
+        y: entryY,
+        rotateX: tiltAngle,
         opacity: 0,
         zIndex: i
       });
     });
 
-    // Timeline that reveals cards, maintains only 3 visible tops
     const tl = gsap.timeline({
       scrollTrigger: {
         trigger: ".stack-container",
         start: "top top",
-        end: "+=4000",
+        end: "+=5000",
         scrub: true,
         pin: true,
         anticipatePin: 1
@@ -101,28 +102,31 @@
     cards.forEach((card, i) => {
       const startTime = i * 0.5;
 
-      // Bring in this card
+      // Animate current card in
       tl.to(card, {
         rotateX: 0,
         opacity: 1,
         y: (maxVisible - 1) * spacing,
-        duration: 0.5
+        duration: 0.6,
+        ease: "power2.out"
       }, startTime);
 
-      // Shift all previous visible cards up
+      // Push previous visible cards up
       for (let j = Math.max(0, i - (maxVisible - 1)); j < i; j++) {
         tl.to(cards[j], {
           y: `-=${spacing}`,
-          duration: 0.3
+          duration: 0.4,
+          ease: "power1.out"
         }, startTime);
       }
 
-      // Fade out card that moved beyond top
+      // Fade out oldest card
       if (i >= maxVisible) {
         const fadeOutCard = cards[i - maxVisible];
         tl.to(fadeOutCard, {
           opacity: 0,
-          duration: 0.3
+          duration: 0.3,
+          ease: "power1.out"
         }, startTime + 0.2);
       }
     });
