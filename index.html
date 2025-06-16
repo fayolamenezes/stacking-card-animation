@@ -41,7 +41,7 @@
       align-items: center;
       justify-content: center;
       color: white;
-      font-size: 3rem;
+      font-size: 5rem;
       border: 2px solid #fff3;
     }
 
@@ -73,12 +73,11 @@
     gsap.registerPlugin(ScrollTrigger);
 
     const cards = gsap.utils.toArray(".card");
-    const maxVisible = 3;      
-    const spacing = 40;        
-    const entryY = 1000;       
-    const tiltAngle = -10;     
+    const maxVisible = 3;
+    const spacing = 40;
+    const entryY = 1000;
+    const tiltAngle = -10;
 
-    // Initial state
     cards.forEach((card, i) => {
       gsap.set(card, {
         y: entryY,
@@ -102,12 +101,10 @@
     cards.forEach((card, i) => {
       const startTime = i * 0.5;
 
-      // Instantly show card when animation starts
       tl.set(card, {
         opacity: 1
       }, startTime);
 
-      // Animate card into stack
       tl.to(card, {
         rotateX: 0,
         y: (maxVisible - 1) * spacing,
@@ -115,7 +112,6 @@
         ease: "power2.out"
       }, startTime);
 
-      // Push previous visible cards up
       for (let j = Math.max(0, i - (maxVisible - 1)); j < i; j++) {
         tl.to(cards[j], {
           y: `-=${spacing}`,
@@ -124,7 +120,6 @@
         }, startTime);
       }
 
-      // Fade out oldest card (optional)
       if (i >= maxVisible) {
         const fadeOutCard = cards[i - maxVisible];
         tl.to(fadeOutCard, {
