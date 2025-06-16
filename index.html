@@ -29,8 +29,8 @@
 
     .card {
       position: absolute;
-      width: 1000px;
-      height: 600px;
+      width: 2500px;
+      height: 1200px;
       background: linear-gradient(135deg, #ff6f91, #3c0a4d);
       border-radius: 20px;
       box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5);
@@ -78,7 +78,7 @@
     cards.forEach((card, i) => {
       gsap.set(card, {
         y: 100,
-        rotateX: -90,
+        rotateX: -50,
         opacity: 0,
         zIndex: i + 1
       });
